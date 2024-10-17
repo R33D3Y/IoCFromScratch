@@ -1,27 +1,27 @@
-﻿using IoCFromScratch.Container;
+﻿using IoCFromScratch.Containers;
+using IoCFromScratch.Enums;
 using IoCFromScratch.Interfaces;
 using IoCFromScratch.Services;
 
 namespace IoCFromScratch
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
             // Create IoC container
             var container = new IoCContainer();
 
-            // Register interface to concrete class mapping
-            container.Register<IEmailService, EmailService>();
+            // Register services
+            container.Register<IEmailService, EmailService>(Lifetime.Singleton);
+            container.Register<NotificationService>(); // Transient by default
 
-            // Register concrete types without an interface
-            container.Register<NotificationService>();
+            // Resolve the same GuidService multiple times to show it's a singleton
+            var notificationService1 = container.Resolve<NotificationService>();
+            var notificationService2 = container.Resolve<NotificationService>();
 
-            // Resolve NotificationService
-            var notificationService = container.Resolve<NotificationService>();
-
-            // Use the service
-            notificationService.Notify("Hello from IoC Container!");
+            notificationService1.Notify("Hello from IoC Container!"); // Should output 0
+            notificationService2.Notify("Hello from IoC Container!"); // Should output 1
         }
     }
 }
