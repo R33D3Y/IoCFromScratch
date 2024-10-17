@@ -41,19 +41,17 @@ namespace IoCFromScratch.Containers
 
         private object Resolve(Type interfaceType, params object[] args)
         {
-            if (!_types.ContainsKey(interfaceType))
+            if (!_types.TryGetValue(interfaceType, out ServiceDescriptor serviceDescriptor))
             {
                 throw new Exception($"No type registered for {interfaceType.Name}");
             }
 
-            var serviceDescriptor = _types[interfaceType];
-
             // Check if it's a singleton and already created
             if (serviceDescriptor.Lifetime == Lifetime.Singleton)
             {
-                if (_singletons.ContainsKey(serviceDescriptor.ImplementationType))
+                if (_singletons.TryGetValue(serviceDescriptor.ImplementationType, out object? value))
                 {
-                    return _singletons[serviceDescriptor.ImplementationType];  // Return existing singleton
+                    return value; // Return existing singleton
                 }
             }
 
