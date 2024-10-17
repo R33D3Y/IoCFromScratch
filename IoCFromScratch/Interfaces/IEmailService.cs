@@ -6,6 +6,6 @@
         /// Send an Email with supplied message
         /// </summary>
         /// <param name="message">Message to send</param>
-        void SendEmail(string message);
+        public void SendEmail(string message);
     }
 }
